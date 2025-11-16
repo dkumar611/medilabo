@@ -32,4 +32,11 @@ public class PatientController {
         patientRepo.deleteById(id);
     }
 
+    // Delete patients by name
+    @DeleteMapping("/deleteByName")
+    public String deletePatientsByName(@RequestParam String name) {
+        patientRepo.deleteByName(name);
+        return "Deleted all patients with name: " + name;
+    }
+
 }
