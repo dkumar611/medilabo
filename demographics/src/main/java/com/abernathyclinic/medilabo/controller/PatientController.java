@@ -33,10 +33,10 @@ public class PatientController {
     }
 
     // Delete patients by name
-    @DeleteMapping("/deleteByName")
-    public String deletePatientsByName(@RequestParam String name) {
-        patientRepo.deleteByName(name);
-        return "Deleted all patients with name: " + name;
+    @DeleteMapping("/deleteByLastName")
+    public String deletePatientsByName(@RequestParam String lastName) {
+        patientRepo.deleteByLastName(lastName);
+        return "Deleted all patients with name: " + lastName;
     }
 
 }

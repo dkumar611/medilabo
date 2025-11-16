@@ -6,15 +6,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-    private int age;
+    private String firstName;
+    private String lastName;
+    private LocalDate dateOfBirth;
     private String gender;
-    private String diagnosis;
+    private String address;
+    private String phone;
 }
