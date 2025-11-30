@@ -1,7 +1,8 @@
 package com.abernathyclinic.medilabo.controller;
-
+import com.abernathyclinic.medilabo.service.PatientService;
 import com.abernathyclinic.medilabo.domain.Patient;
 import com.abernathyclinic.medilabo.repository.PatientRepo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,15 +12,27 @@ import java.util.List;
 public class PatientController {
 
     private final PatientRepo patientRepo;
+    private final PatientService patientService;
 
-    public PatientController(PatientRepo service) {
-        this.patientRepo = service;
+    public PatientController(PatientRepo patientRepo, PatientService patientService) {
+        this.patientRepo = patientRepo;
+        this.patientService = patientService;
     }
 
 
     @GetMapping
     public List<Patient> getAllPatients() {
         return patientRepo.findAll();
+    }
+
+    // GET /patients/search?firstName=John&lastName=Doe
+    @GetMapping("/search")
+    public ResponseEntity<Patient> getPatientByName(
+            @RequestParam String firstName,
+            @RequestParam String lastName) {
+
+        Patient patient = patientService.getPatient(firstName, lastName);
+        return ResponseEntity.ok(patient);
     }
 
     @PostMapping
