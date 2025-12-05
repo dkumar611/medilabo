@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/patients")
+@RequestMapping("/api/patients")
 public class PatientController {
 
     private final PatientRepo patientRepo;
@@ -38,6 +38,15 @@ public class PatientController {
     @PostMapping
     public Patient createPatient(@RequestBody Patient patient) {
         return patientRepo.save(patient);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Patient> updatePatient(
+            @PathVariable Long id,
+            @RequestBody Patient updatedPatient) {
+
+        Patient updated = patientService.updatePatient(id, updatedPatient);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
