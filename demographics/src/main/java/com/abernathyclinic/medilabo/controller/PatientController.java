@@ -35,6 +35,13 @@ public class PatientController {
         return ResponseEntity.ok(patient);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Patient> getPatientById(@PathVariable long id) {
+        return patientRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public Patient createPatient(@RequestBody Patient patient) {
         return patientRepo.save(patient);
