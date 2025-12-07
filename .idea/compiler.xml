@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for medilabo-gateway" enabled="true">
+      <profile name="Annotation profile for medilabo-noteservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -11,8 +11,9 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar" />
         </processorPath>
         <module name="medilabo-gateway" />
-        <module name="medilabo-ui" />
         <module name="medilabo" />
+        <module name="medilabo-noteservice" />
+        <module name="medilabo-ui" />
       </profile>
     </annotationProcessing>
   </component>
@@ -20,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="medilabo" options="-parameters" />
       <module name="medilabo-gateway" options="-parameters" />
+      <module name="medilabo-noteservice" options="-parameters" />
       <module name="medilabo-ui" options="-parameters" />
     </option>
   </component>
