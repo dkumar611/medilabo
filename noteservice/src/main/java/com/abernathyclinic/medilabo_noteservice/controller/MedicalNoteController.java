@@ -1,7 +1,7 @@
 package com.abernathyclinic.medilabo_noteservice.controller;
 
 import com.abernathyclinic.medilabo_noteservice.domain.MedicalNote;
-import com.abernathyclinic.medilabo_notes.service.MedicalNoteService;
+import com.abernathyclinic.medilabo_noteservice.service.MedicalNoteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +33,11 @@ public class MedicalNoteController {
         }
         MedicalNote saved = service.addNote(note);
         return ResponseEntity.ok(saved);
+    }
+
+    @GetMapping
+    public List<MedicalNote> getAllNotes() {
+        return service.getAllNotes();
     }
 
     // GET single note

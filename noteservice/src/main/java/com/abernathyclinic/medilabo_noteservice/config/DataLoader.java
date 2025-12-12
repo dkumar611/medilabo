@@ -1,4 +1,4 @@
-package com.abernathyclinic.medilabo_notes.config;
+package com.abernathyclinic.medilabo_noteservice.config;
 
 import com.abernathyclinic.medilabo_noteservice.domain.MedicalNote;
 import com.abernathyclinic.medilabo_noteservice.repository.MedicalNoteRepository;

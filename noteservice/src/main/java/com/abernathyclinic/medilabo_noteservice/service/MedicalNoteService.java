@@ -1,4 +1,4 @@
-package com.abernathyclinic.medilabo_notes.service;
+package com.abernathyclinic.medilabo_noteservice.service;
 
 import com.abernathyclinic.medilabo_noteservice.domain.MedicalNote;
 import com.abernathyclinic.medilabo_noteservice.repository.MedicalNoteRepository;
@@ -25,6 +25,11 @@ public class MedicalNoteService {
             note.setCreatedAt(LocalDateTime.now());
         }
         return repo.save(note);
+    }
+
+    // Fetch all notes
+    public  List<MedicalNote> getAllNotes() {
+        return repo.findAll();
     }
 
     public MedicalNote getById(String id) {
