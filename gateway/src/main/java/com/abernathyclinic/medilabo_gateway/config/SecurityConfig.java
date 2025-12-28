@@ -46,21 +46,16 @@ public class SecurityConfig {
 
     // Security rules
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .authorizeExchange(auth -> auth
-                        .pathMatchers(
-                                "/login",
-                                "/css/**",
-                                "/js/**",
-                                "/images/**"
-                        ).permitAll()
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/login", "/patients/**", "/css/**", "/js/**", "/images/**").permitAll()
+                        .pathMatchers("/api/**").permitAll()   //
                         .anyExchange().authenticated()
                 )
-                // HTTP Basic for testing
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
+
 }
