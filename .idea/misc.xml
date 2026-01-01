@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/frontend/pom.xml" />
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/noteservice/pom.xml" />
+        <option value="$PROJECT_DIR$/medilabo-diabetes-assessment/pom.xml" />
       </list>
     </option>
   </component>

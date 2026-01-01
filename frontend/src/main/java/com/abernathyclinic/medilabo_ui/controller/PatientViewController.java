@@ -2,9 +2,12 @@ package com.abernathyclinic.medilabo_ui.controller;
 
 import com.abernathyclinic.medilabo_ui.dto.PatientDTO;
 import com.abernathyclinic.medilabo_ui.service.PatientService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 
 @Controller
 @RequestMapping("/patients")
@@ -18,8 +21,31 @@ public class PatientViewController {
 
     // LIST PAGE
     @GetMapping("/view")
-    public String viewPatients(Model model) {
-        model.addAttribute("patients", patientService.getAllPatients());
+    public String viewPatients(Model model, HttpServletRequest request) {
+        // If user is not authenticated (no JWT cookie), redirect the user to the gateway login page
+        Cookie[] cookies = request.getCookies();
+        boolean hasJwt = false;
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("JWT-TOKEN".equals(c.getName())) {
+                    hasJwt = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasJwt) {
+            // Redirect to gateway's login page (gateway runs on :8080)
+            return "redirect:http://localhost:8080/login";
+        }
+
+        try {
+            model.addAttribute("patients", patientService.getAllPatients());
+        } catch (RestClientException ex) {
+            // If backend returned HTML (e.g. login page) or other error, redirect to gateway login
+            return "redirect:http://localhost:8080/login";
+        }
+
         model.addAttribute("newPatient", new PatientDTO());
         return "patients";  // patients.html
     }
