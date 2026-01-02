@@ -27,6 +27,8 @@
             <th>DOB</th>
             <th>Gender</th>
             <th>Phone</th>
+            <th>Triggers</th>
+            <th>Risk</th>
             <th style="width:260px;">Actions</th>
         </tr>
         </thead>
@@ -39,6 +41,20 @@
             <td th:text="${p.dateOfBirth}"></td>
             <td th:text="${p.gender}"></td>
             <td th:text="${p.phone}"></td>
+
+            <!-- Trigger count -->
+            <td th:text="${p.triggerTermCount} ?: 0"></td>
+
+            <!-- Risk badge -->
+            <td>
+        <span th:text="${p.riskLevel}"
+              th:classappend="
+                  ${p.riskLevel} == 'None' ? 'badge bg-success' :
+                  (${p.riskLevel} == 'Borderline' ? 'badge bg-warning' :
+                  (${p.riskLevel} == 'In Danger' ? 'badge bg-danger' :
+                  'badge bg-dark'))">
+        </span>
+            </td>
 
             <td class="text-nowrap">
                 <!-- View Notes Page -->

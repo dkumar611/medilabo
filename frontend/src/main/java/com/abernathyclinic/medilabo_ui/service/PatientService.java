@@ -1,6 +1,7 @@
 package com.abernathyclinic.medilabo_ui.service;
 
 import com.abernathyclinic.medilabo_ui.dto.PatientDTO;
+import com.abernathyclinic.medilabo_ui.dto.DiabetesAssessmentDto; // new DTO for trigger/risk
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -22,15 +23,17 @@ public class PatientService {
     private final RestTemplate restTemplate;
     private final HttpServletRequest request;  // to access cookies
 
-    // Example: "http://localhost:8080/api/patients"
     private final String patientApiUrl;
+    private final String diabetesAssessmentApiUrl;
 
     public PatientService(RestTemplate restTemplate,
                           HttpServletRequest request,
-                          @org.springframework.beans.factory.annotation.Value("${backend.patient-api-url}") String patientApiUrl) {
+                          @org.springframework.beans.factory.annotation.Value("${backend.patient-api-url}") String patientApiUrl,
+                          @org.springframework.beans.factory.annotation.Value("${backend.diabetes-assessment-api-url}") String diabetesAssessmentApiUrl) {
         this.restTemplate = restTemplate;
         this.request = request;
         this.patientApiUrl = patientApiUrl;
+        this.diabetesAssessmentApiUrl = diabetesAssessmentApiUrl;
     }
 
     // Helper: create headers with JWT cookie
@@ -48,7 +51,7 @@ public class PatientService {
         return headers;
     }
 
-    // GET ALL
+    // GET ALL patients + attach trigger/risk
     public List<PatientDTO> getAllPatients() {
         try {
             HttpEntity<String> entity = new HttpEntity<>(createHeadersWithJwt());
@@ -59,14 +62,21 @@ public class PatientService {
                     PatientDTO[].class
             );
             PatientDTO[] list = response.getBody();
-            return list == null ? Collections.emptyList() : Arrays.asList(list);
+            if (list == null) return Collections.emptyList();
+
+            // For each patient, fetch assessment
+            for (PatientDTO p : list) {
+                attachDiabetesAssessment(p);
+            }
+
+            return Arrays.asList(list);
         } catch (RestClientException ex) {
             log.warn("Failed to fetch patients from backend: {}", ex.toString());
             return Collections.emptyList();
         }
     }
 
-    // GET ONE
+    // GET ONE patient + attach trigger/risk
     public PatientDTO getPatientById(Long id) {
         HttpEntity<String> entity = new HttpEntity<>(createHeadersWithJwt());
         ResponseEntity<PatientDTO> response = restTemplate.exchange(
@@ -75,7 +85,34 @@ public class PatientService {
                 entity,
                 PatientDTO.class
         );
-        return response.getBody();
+        PatientDTO patient = response.getBody();
+        if (patient != null) attachDiabetesAssessment(patient);
+        return patient;
+    }
+
+    // Helper method to call diabetes assessment API and set values
+    public void attachDiabetesAssessment(PatientDTO patient) {
+        try {
+            HttpEntity<String> entity = new HttpEntity<>(createHeadersWithJwt());
+            ResponseEntity<DiabetesAssessmentDto> assessmentResponse = restTemplate.exchange(
+                    diabetesAssessmentApiUrl + "/" + patient.getId(),
+                    HttpMethod.GET,
+                    entity,
+                    DiabetesAssessmentDto.class
+            );
+            DiabetesAssessmentDto assessment = assessmentResponse.getBody();
+            if (assessment != null) {
+                patient.setTriggerTermCount(assessment.getTriggerTermCount());
+                patient.setRiskLevel(assessment.getRiskLevel());
+            } else {
+                patient.setTriggerTermCount(0);
+                patient.setRiskLevel("None");
+            }
+        } catch (RestClientException ex) {
+            log.warn("Failed to fetch diabetes assessment for patient {}: {}", patient.getId(), ex.toString());
+            patient.setTriggerTermCount(0);
+            patient.setRiskLevel("None");
+        }
     }
 
     // CREATE

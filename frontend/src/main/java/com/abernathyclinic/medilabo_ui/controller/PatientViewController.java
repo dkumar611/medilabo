@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/patients")
 public class PatientViewController {
@@ -40,7 +42,15 @@ public class PatientViewController {
         }
 
         try {
-            model.addAttribute("patients", patientService.getAllPatients());
+            List<PatientDTO> patients = patientService.getAllPatients();
+
+            // Fetch and attach diabetes assessment info for each patient
+            for (PatientDTO patient : patients) {
+                patientService.attachDiabetesAssessment(patient);
+            }
+
+            model.addAttribute("patients", patients);
+
         } catch (RestClientException ex) {
             // If backend returned HTML (e.g. login page) or other error, redirect to gateway login
             return "redirect:http://localhost:8080/login";
@@ -67,7 +77,12 @@ public class PatientViewController {
     // EDIT PAGE
     @GetMapping("/edit/{id}")
     public String editPatientForm(@PathVariable Long id, Model model) {
-        model.addAttribute("patient", patientService.getPatientById(id));
+        PatientDTO patient = patientService.getPatientById(id);
+
+        // Also attach diabetes assessment info for edit page if needed
+        patientService.attachDiabetesAssessment(patient);
+
+        model.addAttribute("patient", patient);
         return "edit-patient";  // edit-patient.html
     }
 

@@ -13,4 +13,9 @@ public class PatientDTO {
     private String gender;
     private String address;
     private String phone;
+
+    // New fields for diabetes assessment
+    private Integer triggerTermCount;
+    private String riskLevel;
+
 }
