@@ -8,7 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for medilabo-ui" enabled="true">
+      <profile name="Annotation profile for medilabo-noteservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -18,8 +18,8 @@
         <module name="medilabo-gateway" />
         <module name="medilabo-diabetes-assessment" />
         <module name="medilabo" />
-        <module name="medilabo-ui" />
         <module name="medilabo-noteservice" />
+        <module name="medilabo-ui" />
       </profile>
     </annotationProcessing>
   </component>

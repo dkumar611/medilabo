@@ -1,0 +1,112 @@
+version: "3.9"
+
+services:
+
+  # -----------------------------
+  # PostgreSQL Database
+  # -----------------------------
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: patients_db
+      POSTGRES_USER: medilabo
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # -----------------------------
+  # MongoDB Database
+  # -----------------------------
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    environment:
+      MONGO_INITDB_DATABASE: medilabo_notes
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+
+  # -----------------------------
+  # Patient Service
+  # -----------------------------
+  patient-service:
+    build:
+      context: ./demographics
+    container_name: patient-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  # -----------------------------
+  # Frontend / UI
+  # -----------------------------
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "8082:8082"
+    depends_on:
+      - patient-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  # -----------------------------
+  # Gateway
+  # -----------------------------
+  gateway:
+    build:
+      context: ./gateway
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - frontend
+      - patient-service
+      - noteservice
+      - diabetes-assessment
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  # -----------------------------
+  # Notes Service
+  # -----------------------------
+  noteservice:
+    build:
+      context: ./noteservice
+    container_name: noteservice
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  # -----------------------------
+  # Diabetes Assessment Service
+  # -----------------------------
+  diabetes-assessment:
+    build:
+      context: ./medilabo-diabetes-assessment
+    container_name: diabetes-assessment
+    ports:
+      - "8084:8084"
+    depends_on:
+      - frontend
+      - patient-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+# -----------------------------
+# Volumes
+# -----------------------------
+volumes:
+  pgdata:
+  mongodata:
