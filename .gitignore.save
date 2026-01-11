@@ -1,0 +1,15 @@
+# macOS system files
+.DS_Store
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Build folders
+target/
+
+
+	
