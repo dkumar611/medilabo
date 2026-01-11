@@ -59,9 +59,10 @@ public class SecurityConfig {
 
                             webFilterExchange.getExchange().getResponse()
                                     .setStatusCode(HttpStatus.FOUND);
+                            // Use absolute redirect to the gateway host so the browser always returns to the gateway
                             webFilterExchange.getExchange().getResponse()
                                     .getHeaders()
-                                    .setLocation(URI.create("http://localhost:8082/patients/view"));
+                                    .setLocation(URI.create("http://localhost:8080/patients/view"));
 
                             return Mono.empty();
                         })

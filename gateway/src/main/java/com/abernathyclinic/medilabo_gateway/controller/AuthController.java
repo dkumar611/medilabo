@@ -16,7 +16,8 @@ public class AuthController {
 
         String jwt = JwtUtil.generateToken(authentication.getName());
 
-        ResponseCookie cookie = ResponseCookie.from("MEDILABO_TOKEN", jwt)
+        // Use the same cookie name as SecurityConfig and JwtCookieAuthenticationFilter
+        ResponseCookie cookie = ResponseCookie.from("JWT-TOKEN", jwt)
                 .httpOnly(true)
                 .path("/")
                 .maxAge(3600)
@@ -25,8 +26,9 @@ public class AuthController {
         response.addCookie(cookie);
 
         response.setStatusCode(org.springframework.http.HttpStatus.FOUND);
+        // Redirect back to the gateway host so the browser always navigates via the gateway
         response.getHeaders().setLocation(
-                java.net.URI.create("/patients/view")
+                java.net.URI.create("http://localhost:8080/patients/view")
         );
 
         return response.setComplete();
