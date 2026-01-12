@@ -55,6 +55,7 @@ public class SecurityConfig {
                                     .path("/")
                                     .maxAge(60 * 60)
                                     .build();
+                            // webFilterExchange here is a WebFilterExchange; use getExchange().getResponse()
                             webFilterExchange.getExchange().getResponse().addCookie(cookie);
 
                             webFilterExchange.getExchange().getResponse()
@@ -68,10 +69,11 @@ public class SecurityConfig {
                         })
                         .authenticationFailureHandler((webFilterExchange, exception) -> Mono.empty())
                 )
+                // Revert: allow API routes through (no central authentication enforcement)
                 .authorizeExchange(exchanges -> exchanges
                         // UI login + static resources
                         .pathMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
-                        // **API routes bypass security**
+                        // Allow API routes to be proxied (frontend will handle cookie forwarding)
                         .pathMatchers("/api/**").permitAll()
                         // everything else requires JWT
                         .anyExchange().authenticated()
