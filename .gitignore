@@ -11,5 +11,6 @@
 # Build folders
 target/
 
+.env
 
 	

@@ -64,14 +64,15 @@ public class PatientViewController {
     @PostMapping
     public String addPatient(@ModelAttribute PatientDTO patient) {
         patientService.createPatient(patient);
-        return "redirect:/patients/view";
+        // Redirect back to gateway so the browser stays on gateway origin
+        return "redirect:http://localhost:8080/patients/view";
     }
 
     // DELETE
     @GetMapping("/delete/{id}")
     public String deletePatient(@PathVariable Long id) {
         patientService.deletePatient(id);
-        return "redirect:/patients/view";
+        return "redirect:http://localhost:8080/patients/view";
     }
 
     // EDIT PAGE
@@ -90,6 +91,6 @@ public class PatientViewController {
     @PostMapping("/update/{id}")
     public String updatePatient(@PathVariable Long id, @ModelAttribute PatientDTO updatedPatient) {
         patientService.updatePatient(id, updatedPatient);
-        return "redirect:/patients/view";
+        return "redirect:http://localhost:8080/patients/view";
     }
 }
