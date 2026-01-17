@@ -9,9 +9,9 @@ services:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_DB: patients_db
-      POSTGRES_USER: medilabo
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -24,7 +24,7 @@ services:
     image: mongo:6
     container_name: mongo
     environment:
-      MONGO_INITDB_DATABASE: medilabo_notes
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     ports:
       - "27017:27017"
     volumes:
@@ -74,6 +74,10 @@ services:
       - diabetes-assessment
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      ADMIN_USER: ${GATEWAY_ADMIN_USER}
+      ADMIN_PASSWORD: ${GATEWAY_ADMIN_PASSWORD}
+      DOCTOR_USER: ${GATEWAY_DOCTOR_USER}
+      DOCTOR_PASSWORD: ${GATEWAY_DOCTOR_PASSWORD}
 
   # -----------------------------
   # Notes Service

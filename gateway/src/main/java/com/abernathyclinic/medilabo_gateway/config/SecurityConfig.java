@@ -28,15 +28,21 @@ public class SecurityConfig {
 
     @Bean
     public MapReactiveUserDetailsService userDetailsService(PasswordEncoder encoder) {
+
+        String adminUser = System.getenv("ADMIN_USER");
+        String adminPass = System.getenv("ADMIN_PASSWORD");
+        String doctorUser = System.getenv("DOCTOR_USER");
+        String doctorPass = System.getenv("DOCTOR_PASSWORD");
+
         UserDetails admin = User.builder()
-                .username("admin")
-                .password(encoder.encode("admin123"))
+                .username(adminUser)
+                .password(encoder.encode(adminPass))
                 .roles("ADMIN")
                 .build();
 
         UserDetails doctor = User.builder()
-                .username("doctor")
-                .password(encoder.encode("doctor123"))
+                .username(doctorUser)
+                .password(encoder.encode(doctorPass))
                 .roles("PHYSICIAN")
                 .build();
 
