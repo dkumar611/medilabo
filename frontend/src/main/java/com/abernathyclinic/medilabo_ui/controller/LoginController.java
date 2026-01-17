@@ -11,4 +11,3 @@ public class LoginController {
         return "login"; // resolves to login.html
     }
 }
-you
